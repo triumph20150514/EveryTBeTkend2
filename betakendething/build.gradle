@@ -29,5 +29,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
-    compile 'org.simple:androideventbus:1.0.5.1'
+    compile 'org.simple:androideventbus:1.0.5.1' //
+    compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.5' //底部导航
 }

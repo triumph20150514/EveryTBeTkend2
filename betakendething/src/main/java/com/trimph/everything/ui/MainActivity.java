@@ -1,7 +1,9 @@
-package com.trimph.everything;
+package com.trimph.everything.ui;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.trimph.everything.R;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
@@ -16,26 +18,28 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().register(this);
     }
 
+
     //没有指定标签
     @Subscriber
-    public void loadUser(String user){
+    public void loadUser(String user) {
 
     }
 
     //指定了tag 只有Post了指定的tag 方法才会执行
     @Subscriber(tag = "MyFirstTag")
-    public void User(String user){
+    public void User(String user) {
 
     }
 
     //指定了tag 只有Post了指定的tag 方法才会执行  指定在独立线程中
-    @Subscriber(tag = "MyFirstTag",mode = ThreadMode.ASYNC)
-    public void Users(String user){
+    @Subscriber(tag = "MyFirstTag", mode = ThreadMode.ASYNC)
+    public void Users(String user) {
 
     }
+
     //指定了tag 只有Post了指定的tag 方法才会执行  运行在执行Post方法的线程中
-    @Subscriber(tag = "MyFirstTag",mode = ThreadMode.POST)
-    public void Users3(String user){
+    @Subscriber(tag = "MyFirstTag", mode = ThreadMode.POST)
+    public void Users3(String user) {
 
     }
 
