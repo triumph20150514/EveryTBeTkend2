@@ -13,7 +13,9 @@ import android.view.ViewGroup;
  * description:
  */
 
-public class BaseFragment extends Fragment {
+public class BaseFragment<T extends BasePresenter> extends Fragment {
+
+    public T presenter;
 
     @Nullable
     @Override

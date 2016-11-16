@@ -3,7 +3,6 @@ package com.trimph.everything.ui.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.icu.util.TimeUnit;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
@@ -40,7 +39,7 @@ public class WelcomeViewImpl extends RootView<WelcomeContact.WelcomePresenter> i
     TextView tv;
 
     public WelcomeViewImpl(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public WelcomeViewImpl(Context context, AttributeSet attrs) {
@@ -51,12 +50,14 @@ public class WelcomeViewImpl extends RootView<WelcomeContact.WelcomePresenter> i
     public void showContent(GankItemBean videoRes) {
         Log.e("NET", videoRes.getUrl());
         tv.setText(videoRes.getUrl());
-        Glide.with(context).load(videoRes.getUrl()).crossFade().into(startImage);
+        Glide.with(context).load("http://ww4.sinaimg.cn/large/610dc034jw1f6yq5xrdofj20u00u0aby.jpg").crossFade().into(startImage);
 //        GlideUtils.DisplayImage(context, startImage, videoRes.getUrl());
         startImage.animate().scaleX(1.15f).scaleY(1.15f).setDuration(2000).setInterpolator(new LinearInterpolator()).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                jumpToMain(context);
+                if (active) {
+                    jumpToMain(context);
+                }
             }
         }).start();
     }

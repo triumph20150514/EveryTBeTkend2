@@ -20,6 +20,7 @@ public interface WelcomeContact {
         void jumpToMain(Context context);
     }
 
+    
     interface WelcomePresenter extends BasePresenter {
         void getWelcomeData();
     }

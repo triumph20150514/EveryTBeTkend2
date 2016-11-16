@@ -32,6 +32,22 @@ public class GankItemBean {
     private String who;
     private int height;
 
+    @Override
+    public String toString() {
+        return "GankItemBean{" +
+                "_id='" + _id + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", desc='" + desc + '\'' +
+                ", publishedAt='" + publishedAt + '\'' +
+                ", source='" + source + '\'' +
+                ", type='" + type + '\'' +
+                ", url='" + url + '\'' +
+                ", used=" + used +
+                ", who='" + who + '\'' +
+                ", height=" + height +
+                '}';
+    }
+
     public int getHeight() {
         return height;
     }

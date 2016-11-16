@@ -5,6 +5,8 @@ package com.trimph.everything.base;
  */
 
 public interface BasePresenter<T> {
+    void start();
+
     public void attachView(T view);
 
     public void detachView();

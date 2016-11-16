@@ -3,8 +3,7 @@ package com.trimph.everything.utils;
 import android.content.Context;
 import android.content.Intent;
 
-import com.trimph.everything.ui.MainActivity;
-import com.trimph.everything.ui.activity.WelcomeActivity;
+import com.trimph.everything.ui.activity.MainActivity;
 
 /**
  * author: Trimph

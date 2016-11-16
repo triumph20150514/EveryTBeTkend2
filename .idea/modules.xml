@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/EveryTBeTkend.iml" filepath="$PROJECT_DIR$/EveryTBeTkend.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/betakendething/betakendething.iml" filepath="$PROJECT_DIR$/betakendething/betakendething.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gravitydemo/gravitydemo.iml" filepath="$PROJECT_DIR$/gravitydemo/gravitydemo.iml" />
     </modules>
   </component>
 </project>

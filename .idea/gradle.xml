@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/betakendething" />
+            <option value="$PROJECT_DIR$/gravitydemo" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

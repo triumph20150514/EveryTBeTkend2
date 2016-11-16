@@ -26,6 +26,11 @@ public class RxPresenter<T> implements BasePresenter<T> {
     }
 
     @Override
+    public void start() {
+
+    }
+
+    @Override
     public void attachView(T view) {
         this.view = view;
         Log.e("detachView", "attachView");

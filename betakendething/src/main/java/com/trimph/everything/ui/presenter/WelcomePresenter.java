@@ -35,6 +35,8 @@ public class WelcomePresenter extends RxPresenter implements WelcomeContact.Welc
      */
     public WelcomePresenter(WelcomeContact.WelcomeView welcomeView) {
         this.welcomeView = welcomeView;
+        //注入进去
+        welcomeView.setPersenter(this);  ///什么
     }
 
     @Override
@@ -64,4 +66,8 @@ public class WelcomePresenter extends RxPresenter implements WelcomeContact.Welc
         addComposite(subscription);
     }
 
+    @Override
+    public void start() {
+
+    }
 }

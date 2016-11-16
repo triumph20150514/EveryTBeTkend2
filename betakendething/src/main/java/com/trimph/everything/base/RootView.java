@@ -18,6 +18,7 @@ public abstract class RootView<T extends BasePresenter> extends LinearLayout {
 
     public T rPresenter;
     public Unbinder binder;
+    public boolean active=false;
 
     public RootView(Context context) {
         super(context);
@@ -37,6 +38,7 @@ public abstract class RootView<T extends BasePresenter> extends LinearLayout {
     @Override
     protected void onAttachedToWindow() {
 //        rPresenter.attachView(this);
+        active=true;
         if (rPresenter != null) {
             rPresenter.attachView(this);
         }
@@ -45,6 +47,7 @@ public abstract class RootView<T extends BasePresenter> extends LinearLayout {
 
     @Override
     protected void onDetachedFromWindow() {
+        active=false;
         if (rPresenter!=null){
             rPresenter.detachView();
         }
