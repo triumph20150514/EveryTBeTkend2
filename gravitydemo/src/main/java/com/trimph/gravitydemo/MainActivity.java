@@ -14,9 +14,15 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -35,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //以速度1向右移动
     private static final int RIGHT_1 = 3;
 
-
     //以速度2向右移动
     private static final int RIGHT_2 = 4;
 
@@ -45,12 +50,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Date date = new Date();
+        date.getTime();
+
+        Log.e("Data", date.getTime() + "");
+        Log.e("Data", System.currentTimeMillis() + "");
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日   HH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());
+        String str = formatter.format(curDate);
+
+
+        Log.e("Data str", str + "");
+
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL, Locale.CHINA);
+        System.out.println(df.format(new Date()));
+        Toast.makeText(this, "Data:" + df.format(new Date()), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Data String:" + DataString.StringData(), Toast.LENGTH_SHORT).show();
+        Log.e("Data str CHINA", df.format(new Date()) + "");
+        Log.e("Data str DataString", DataString.StringData() + "");
+
+//        Time t=new Time("GMT+8"); // or Time t=new Time("GMT+8"); 加上Time Zone资料
+//        t.setToNow(); // 取得系统时间。
+//        int year = t.year;
+//        int month = t.month;
+//        int date = t.monthDay;
+//        int hour = t.hour;    // 0-23
+
+
         ivBg = (ImageView) findViewById(R.id.imageView);
 
         //导入assets文件夹中的文件并将其设置到背景图片控件上
         try {
-
-            InputStream open = getResources().getAssets().open("a.jpg");
+            InputStream open = getResources().getAssets().open("bg_1.jpg");
             Bitmap bitmap = BitmapFactory.decodeStream(open);
             ivBg.setImageBitmap(bitmap);
         } catch (IOException e) {
@@ -59,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //设置图片的缩放模式和显示位置并设置
         mMatrix = new Matrix();
-        mMatrix.postScale(1f, 1f, 1f, 1f);
-        mMatrix.postTranslate(150, 0);
+        mMatrix.postScale(1.5f, 1.5f, 0.5f, 0.5f);
+        mMatrix.postTranslate(-20, 0);
         ivBg.setImageMatrix(mMatrix);
         ivBg.invalidate();
 
@@ -71,7 +104,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         //设置监听器监听加速度传感器（重力感应器）的状态，精度为普通（SENSOR_DELAY_NORMAL）
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+
 
     }
 
@@ -126,12 +160,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //若传感器类型为加速度传感器（重力感应器）
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+//            Sensor.TYPE_GRAVITY
             //获取X坐标
             int x = (int) event.values[SensorManager.DATA_X];
 
-            Log.e("Position", x + "");
+            if (x == 0) orientation = RIGHT_1;//默认向左移动
 
-//            if (x == 0) orientation = RIGHT_1;//默认向左移动
 
             if (x < 2 && x > 0) orientation = RIGHT_1;
 
@@ -156,14 +191,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private PointF getLeftPointF() {
 
         float[] values = new float[9];
-        float[] rightValues = {1.5f, 0, 960f, 0, 1.5f, -0.25f, 0, 0, 1.0f};
-//        float[] rightValues = {1.5f, 0, -1080f, 0, 1.5f, -0.25f, 0, 0, 1.0f};
+        float[] rightValues = {1.5f, 0, -1080f, 0, 1.5f, -0.25f, 0, 0, 1.0f};
         float[] leftValues = {1.5f, 0, 0, 0, 1.5f, -0.25f, 0, 0, 1.0f};
 
         mMatrix.getValues(values);
 
         //若超出边界，为其设置自定义的位置
-        if (values[2] < -960) {
+        if (values[2] < -1080) {
             mMatrix.setValues(rightValues);
         }
         if (values[2] > 0) {
@@ -172,8 +206,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         float leftX = values[2];
         float leftY = values[5];
-        Log.e("Position", "leftX" + leftX + ":leftY" + leftY);
-
         return new PointF(leftX, leftY);
     }
 }
