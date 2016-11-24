@@ -53,4 +53,6 @@ dependencies {
     compile 'com.orhanobut:logger:1.15'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'com.flyco.banner:FlycoBanner_Lib:1.1.8@aar'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.5.8'
+    compile project(':library')
 }

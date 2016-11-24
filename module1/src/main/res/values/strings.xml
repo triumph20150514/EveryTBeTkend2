@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Module1</string>
+
+    <string name="jump_camera_self">體驗手勢拍照</string>
+    <string name="jump_bg_bokeh">體驗背景虛化</string>
+    <string name="jump_selfie_beaulty">體驗全新美顏</string>
+    <string name="jump_selfie_page">返回全新臻美自拍</string>
+    <string name="jump_camera_page">了解高清拍照</string>
+    <string name="jump_face_cp">美顏均勻細膩不偏色</string>
 </resources>

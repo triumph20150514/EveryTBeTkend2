@@ -13,11 +13,14 @@ import com.trimph.everything.net.RetrifitNet;
 import com.trimph.everything.ui.contact.HomeContact;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.observers.Observers;
 import rx.schedulers.Schedulers;
 
 /**
@@ -62,15 +65,14 @@ public class HomePresenter extends RxPresenter implements HomeContact.presenter 
                     @Override
                     public void call(VideoHttpResponse<VideoRes> videoResVideoHttpResponse) {
                         if (videoResVideoHttpResponse != null) {
+                            recycler = true;
                             Log.e("VideoInfo::", videoResVideoHttpResponse.getRet().list.get(0).childList.toString());
                             if (videoResVideoHttpResponse.getCode() == 200) {
-                                recycler = true;
                                 if (isBanner && recycler) {
                                     Log.e("HomePresenter--------", "load view close");
                                     view.closeDialog();
                                 }
                                 view.showContent(videoResVideoHttpResponse.getRet());
-
                             }
                         }
                     }
@@ -93,23 +95,37 @@ public class HomePresenter extends RxPresenter implements HomeContact.presenter 
 
                     @Override
                     public void onNext(GankHttpResponse<List<GankItemBean>> listGankHttpResponse) {
+                        isBanner = true;
                         if (listGankHttpResponse.getError() == false) {
                             Log.e("HomePresenter--------", listGankHttpResponse.getResults().get(0).toString());
                             view.showBannerImage(listGankHttpResponse.getResults());
                             view.showImage(listGankHttpResponse.getResults().get(0));
-                            isBanner = true;
-//                            view.closeDialog();
                             if (isBanner && recycler) {
-                                Log.e("HomePresenter--------", "load view close");
+                                Log.e("HomePresenter*********", "load view close");
                                 view.closeDialog();
                             }
                         }
                     }
                 });
-
+        Subscription subscription3 = close();
 
         addComposite(subscription);
         addComposite(subscription1);
+        addComposite(subscription3);
+    }
+
+    private Subscription close() {
+        return Observable.timer(3000, TimeUnit.MILLISECONDS).subscribe(new Action1<Long>() {
+                @Override
+                public void call(Long aLong) {
+                    if (isBanner && recycler) {
+                        Log.e("HomePresenter--------", "load view close");
+                        view.closeDialog();
+                    }else {
+
+                    }
+                }
+            });
     }
 
     @Override

@@ -1,0 +1,74 @@
+首先拷贝自定义字体到assets/fonts下，然后在自定义Application中设置改变字体。
+
+public class FontsOverride {
+      public static void setDefaultFont(Context context,
+                String staticTypefaceFieldName, String fontAssetName) {
+            final Typeface regular = Typeface.createFromAsset(context.getAssets(),
+                    fontAssetName);
+            replaceFont(staticTypefaceFieldName, regular);
+        }
+
+        protected static void replaceFont(String staticTypefaceFieldName,
+                final Typeface newTypeface) {
+            try {
+                final Field staticField = Typeface.class
+                        .getDeclaredField(staticTypefaceFieldName);
+                staticField.setAccessible(true);
+                staticField.set(null, newTypeface);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+在自定义Application中设置：
+
+ FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/HYXiZYJF.ttf");
+         FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/HYXiZYJF.ttf");
+         FontsOverride.setDefaultFont(this, "SERIF", "fonts/HYXiZYJF.ttf");
+         FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/HYXiZYJF.ttf");

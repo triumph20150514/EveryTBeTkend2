@@ -1,0 +1,93 @@
+
+ ### ViewdragHelper分析 卡片效果的实现
+     V4包中的一个类，从字面可以看出是一个拖拽帮助类。
+     它主要简化处理事件，通过它来自定义一些控件，必须是继承ViewGroup的。
+     它的构造方法私有通过以下方式获取
+       @Override
+         public boolean onTouchEvent(MotionEvent event) {
+             viewDragHelper.processTouchEvent(event); //
+             return true;
+         }
+        @Override
+          public boolean onInterceptTouchEvent(MotionEvent ev) {
+              return viewDragHelper.shouldInterceptTouchEvent(ev) && super.onInterceptTouchEvent(ev);
+          }
+     
+     
+     
+     
+     参数1： 自定义的ViewGroup
+     参数2： 需要实现的接口
+      ```   
+        viewDragHelper = ViewDragHelper.create(this, new ViewDragHelper.Callback() {}
+       ```    
+            ViewDragHelper.create(this, new ViewDragHelper.Callback() {                      
+                       //tryCaptureView()里会传递当前触摸区域下的子View实例作为参数，
+                         如果需要对当前触摸的子View进行拖拽移动就返回true，否则返回false。
+                       public boolean tryCaptureView(View child, int pointerId) {}                       
+                       public void onViewDragStateChanged(int state) {}
+                       public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {}
+                       public void onViewCaptured(View capturedChild, int activePointerId) {}
+                       //此方法做具体的操作， 
+                       public void processTouchEvent(MotionEvent ev) {
+                          ......
+                          ...... 省的代码
+                          case MotionEvent.ACTION_CANCEL: {
+                                       if (mDragState == STATE_DRAGGING) {
+                                           dispatchViewReleased(0, 0);
+                                       }
+                                       cancel();
+                                       break;
+                                    }
+                                   }
+                                   //x下面调用此方法
+                                  private void dispatchViewReleased(float xvel, float yvel) {
+                                      mReleaseInProgress = true;
+                                      mCallback.onViewReleased(mCapturedView, xvel, yvel);
+                                      mReleaseInProgress = false;
+                                      if (mDragState == STATE_DRAGGING) {
+                                          // onViewReleased didn't call a method that would have changed this. Go idle.
+                                          setDragState(STATE_IDLE);
+                                      }
+                                  }     
+                       public void onViewReleased(View releasedChild, float xvel, float yvel) {
+                       //滑动到屏幕边缘触发
+                       public void onEdgeTouched(int edgeFlags, int pointerId) {
+                       public boolean onEdgeLock(int edgeFlags) {
+                       public void onEdgeDragStarted(int edgeFlags, int pointerId) {
+                       public int getOrderedChildIndex(int index) {
+                       public int getViewHorizontalDragRange(View child) {
+                       public int getViewVerticalDragRange(View child) {
+                       // 决定了要拖拽的子View在垂直方向上应该移动到的位置，该方法会传递三个参数：要拖拽的子View实例、
+                         期望的移动后位置子View的top值、移动的距离。返回值为子View在最终位置时的top值，一般直接返回第二个参数即可。
+                       public int clampViewPositionHorizontal(View child, int left, int dx) {
+                        // 和上边的同理
+                       public int clampViewPositionVertical(View child, int top, int dy) {
+      
+     
+      
+     
+     
+     
+      
+      
+
+     
+
+
+
+
+                                                                                           
+
+
+
+
+
+
+
+
+
+
+
+
+  [参考](http://www.cnphp6.com/archives/87727)

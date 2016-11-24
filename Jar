@@ -1,0 +1,21 @@
+ ###  jar包生成
+ Android Studio中对于library类型的Moudle，默认打出来的是AAR包， 
+ 但有时候我们的SDK还需要共享给一些其他eclipse的项目使用，这样我们就需要输出JAR包， 
+ 可以通过在Moudle中的build.gradle加入task来实现
+ task makeJar(type: Copy) {
+     delete 'build/libs/mysdk.jar'
+     from('build/intermediates/bundles/release/')
+     into('build/libs/')
+     include('classes.jar')
+     rename ('classes.jar', 'mysdk.jar')
+ }
+ 
+ makeJar.dependsOn(build)
+ 
+ 在终端执行生成JAR包
+ 
+ ./gradew makeJar
+ 
+ 
+ 
+ 

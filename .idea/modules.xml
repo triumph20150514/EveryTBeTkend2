@@ -7,7 +7,9 @@
       <module fileurl="file://$PROJECT_DIR$/betakendething/betakendething.iml" filepath="$PROJECT_DIR$/betakendething/betakendething.iml" />
       <module fileurl="file://$PROJECT_DIR$/carddraghelper/carddraghelper.iml" filepath="$PROJECT_DIR$/carddraghelper/carddraghelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/gravitydemo/gravitydemo.iml" filepath="$PROJECT_DIR$/gravitydemo/gravitydemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/module1/module1.iml" filepath="$PROJECT_DIR$/module1/module1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mylibrary/mylibrary.iml" filepath="$PROJECT_DIR$/mylibrary/mylibrary.iml" />
     </modules>
   </component>
 </project>
