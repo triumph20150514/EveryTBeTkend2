@@ -11,7 +11,8 @@
         android:id="@+id/slide_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/bg">
+        android:padding="@dimen/dp_40"
+        android:background="@mipmap/c">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -67,9 +68,9 @@
 
         <FrameLayout
             android:id="@+id/mian_frame"
-            android:background="@mipmap/c"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@mipmap/c">
 
         </FrameLayout>
 

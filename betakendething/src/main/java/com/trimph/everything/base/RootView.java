@@ -39,10 +39,12 @@ public abstract class RootView<T extends BasePresenter> extends LinearLayout {
     protected void onAttachedToWindow() {
 //        rPresenter.attachView(this);
         active=true;
+        binder = ButterKnife.bind(this);// 绑定视图
+
         if (rPresenter != null) {
             rPresenter.attachView(this);
         }
-        binder = ButterKnife.bind(this);// 绑定视图
+
     }
 
     @Override

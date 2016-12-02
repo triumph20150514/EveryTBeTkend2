@@ -1,6 +1,9 @@
 package com.trimph.everything.base;
 
 import android.util.Log;
+import android.view.View;
+
+import org.simple.eventbus.EventBus;
 
 import rx.Completable;
 import rx.Subscription;
@@ -30,9 +33,14 @@ public class RxPresenter<T> implements BasePresenter<T> {
 
     }
 
+//    @Override
+//    public void attachView(T view) {
+//
+//    }
+
     @Override
     public void attachView(T view) {
-        this.view = view;
+        this.view = view;//
         Log.e("detachView", "attachView");
     }
 

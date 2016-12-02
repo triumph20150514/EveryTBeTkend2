@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BeTakendEThing</string>
+
+    <string name="expand">展开</string>
+    <string name="shrink">收起</string>
+    <string name="video_about_review">相关评论</string>
+    <string name="video_about_fravorite">相关推荐</string>
 </resources>

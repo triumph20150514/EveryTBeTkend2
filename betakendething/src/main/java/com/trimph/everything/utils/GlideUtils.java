@@ -17,8 +17,11 @@ public class GlideUtils {
 
     public static void DisplayImage(Context activity, ImageView imageView, String url) {
         Glide.with(activity)
+//                 .placeholder(R.mipmap.ic_launcher)
                 .load(url)
-                .error(R.mipmap.ic_launcher)
+                .centerCrop()
+                .error(R.mipmap.loading)
+                .placeholder(R.mipmap.loading) //加载过程中显示的图片
                 .into(imageView);
     }
 }

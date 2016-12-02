@@ -1,20 +1,19 @@
 # EveryTBeTkend
   ### GreenDao 3.0 简单使用
 
-   1. 环境搭建
-
-  ````
+  ###  1. 环境搭建
+  //
       compile 'org.greenrobot:greendao:3.0.1'
       compile 'org.greenrobot:greendao-generator:3.0.0'
       compile 'net.zetetic:android-database-sqlcipher:3.5.2'  //数据库加密使用到的库
-
+//
        greendao {
              schemaVersion 3   //数据库的版本 升级的时候会使用到
               targetGenDir 'src/main/java'    生成的目录
              daoPackage 'com.trimph.everytbetend.model.db'  生成的Dao文件包名
          }
 
-
+//
            buildscript {
               repositories {
                    jcenter()
@@ -28,7 +27,7 @@
              }
         }
      ```
-
+//
      2. 基本使用
         首先需要获取数据库从操作对象 DevOpenHelper他继承与SQLiteOpenHelper
         然后通过控制器DaoMaster获取到中间类 DaoSession
@@ -52,9 +51,9 @@
                   daoSession = new DaoMaster(devOpenHelper.getEncryptedWritableDb("Pwd")).newSession();
                   daoSession.getPictureDao().update(picture);
               }
-
+//
        4. 注解的使用
-
+//
          @Entity    //标志这是一个实体类
          public class Picture {
              @Id(autoincrement = true)  //主键id  设置是否自动增长
@@ -62,7 +61,7 @@
              @Property(nameInDb = "imageUrl")   //字段 设置在数据库中显示的字段名
               public String url;
           }
-
+//
           (一) @Entity 定义实体
           @nameInDb 在数据库中的名字，如不写则为实体中类名
           @indexes 索引
@@ -77,7 +76,7 @@
           (七) @ToOne 一对一
           (八) @Transient 不存储在数据库中
           (九) @generated 由greendao产生的构造函数或方法
-
+//
         schemaVersion： 数据库schema版本，也可以理解为数据库版本号
         daoPackage：设置DaoMaster 、DaoSession、Dao包名
         targetGenDir：设置DaoMaster 、DaoSession、Dao目录
@@ -101,7 +100,7 @@
         @ToOne：定义与另一个实体（一个实体对象）的关系
         @ToMany：定义与多个实体对象的关系
 
-
+//
         5. 数据库升级
         - 需要重新继承OpenHelper
         public class DbHelper extends DaoMaster.OpenHelper {
@@ -112,7 +111,7 @@
             public void onCreate(Database db) {
                 super.onCreate(db);
             }
-
+//
             @Override
             public void onUpgrade(Database db, int oldVersion, int newVersion) {
                 DaoMaster.createAllTables(db, true);  // greenDao升级时要加上  若是要添加其他字段
@@ -122,7 +121,7 @@
        然后初始化的时候就要用到
            daoMaster = new DaoMaster(new DbHelper(context, sp).getWritableDatabase());
             daoSession = daoMaster.newSession();
-
+//
         基本使用就这些了
 
 

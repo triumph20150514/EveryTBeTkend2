@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/module1" />
             <option value="$PROJECT_DIR$/mylibrary" />
+            <option value="$PROJECT_DIR$/svgdemo" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

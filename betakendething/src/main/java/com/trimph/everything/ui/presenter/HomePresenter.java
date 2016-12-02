@@ -1,6 +1,8 @@
 package com.trimph.everything.ui.presenter;
 
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.orhanobut.logger.Logger;
 import com.trimph.everything.base.RxPresenter;
@@ -11,6 +13,7 @@ import com.trimph.everything.model.VideoRes;
 import com.trimph.everything.net.MeiziNet;
 import com.trimph.everything.net.RetrifitNet;
 import com.trimph.everything.ui.contact.HomeContact;
+import com.trimph.everything.ui.view.HomeViewImpl;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,13 +34,13 @@ import rx.schedulers.Schedulers;
 
 public class HomePresenter extends RxPresenter implements HomeContact.presenter {
 
-    HomeContact.view view;
+    HomeContact.view homeView;
     public boolean isBanner = false, recycler = false;
 
     public HomePresenter(HomeContact.view view) {
-        this.view = view;
+        this.homeView = view;
         Log.e("HomePresenter --------", "HomePresenter++++++++");
-        view.setPersenter(this);
+        homeView.setPersenter(this);
         start();
     }
 
@@ -54,7 +57,7 @@ public class HomePresenter extends RxPresenter implements HomeContact.presenter 
 
     private void requestData() {
         Log.e("HomePresenter --------", "requestData");
-        view.showDialog();
+        homeView.showDialog();
         Log.e("VideoInfo::", "come in");
         final RetrifitNet retrifitNet = new RetrifitNet();
 
@@ -68,11 +71,12 @@ public class HomePresenter extends RxPresenter implements HomeContact.presenter 
                             recycler = true;
                             Log.e("VideoInfo::", videoResVideoHttpResponse.getRet().list.get(0).childList.toString());
                             if (videoResVideoHttpResponse.getCode() == 200) {
+                                Log.e("VideoType::::", videoResVideoHttpResponse.getRet().list.toString());
                                 if (isBanner && recycler) {
                                     Log.e("HomePresenter--------", "load view close");
-                                    view.closeDialog();
+                                    homeView.closeDialog();
                                 }
-                                view.showContent(videoResVideoHttpResponse.getRet());
+                                homeView.showContent(videoResVideoHttpResponse.getRet());
                             }
                         }
                     }
@@ -98,15 +102,16 @@ public class HomePresenter extends RxPresenter implements HomeContact.presenter 
                         isBanner = true;
                         if (listGankHttpResponse.getError() == false) {
                             Log.e("HomePresenter--------", listGankHttpResponse.getResults().get(0).toString());
-                            view.showBannerImage(listGankHttpResponse.getResults());
-                            view.showImage(listGankHttpResponse.getResults().get(0));
+                            homeView.showBannerImage(listGankHttpResponse.getResults());
+                            homeView.showImage(listGankHttpResponse.getResults().get(0));
                             if (isBanner && recycler) {
                                 Log.e("HomePresenter*********", "load view close");
-                                view.closeDialog();
+                                homeView.closeDialog();
                             }
                         }
                     }
                 });
+
         Subscription subscription3 = close();
 
         addComposite(subscription);
@@ -116,21 +121,21 @@ public class HomePresenter extends RxPresenter implements HomeContact.presenter 
 
     private Subscription close() {
         return Observable.timer(3000, TimeUnit.MILLISECONDS).subscribe(new Action1<Long>() {
-                @Override
-                public void call(Long aLong) {
-                    if (isBanner && recycler) {
-                        Log.e("HomePresenter--------", "load view close");
-                        view.closeDialog();
-                    }else {
+            @Override
+            public void call(Long aLong) {
+                if (isBanner && recycler) {
+                    Log.e("HomePresenter--------", "load view close");
+                    homeView.closeDialog();
+                } else {
 
-                    }
                 }
-            });
+            }
+        });
     }
 
     @Override
     public void detachView() {
         super.detachView();
-        view.stopBanner();
+        homeView.stopBanner();
     }
 }

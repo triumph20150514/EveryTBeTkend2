@@ -11,7 +11,10 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -46,10 +49,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private int orientation;
 
+    ImageView imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        imageView = (ImageView) findViewById(R.id.img);
+        imageView.getHeight();
+        imageView.getWidth();
 
         Date date = new Date();
         date.getTime();
@@ -95,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mMatrix.postScale(1.5f, 1.5f, 0.5f, 0.5f);
         mMatrix.postTranslate(-20, 0);
         ivBg.setImageMatrix(mMatrix);
+
         ivBg.invalidate();
 
         //为图片控件设置动画
@@ -106,6 +116,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //设置监听器监听加速度传感器（重力感应器）的状态，精度为普通（SENSOR_DELAY_NORMAL）
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
 
+
+    }
+
+    private void start() {
+        Log.e("Image", imageView.getWidth() + " heigth:" + imageView.getHeight() + " left:" + imageView.getLeft() + " right" + imageView.getTop());
+        final Rotate3DAnimator rotate3DAnimator = new Rotate3DAnimator(this, 0, 5,
+                imageView.getWidth() / 2, imageView.getHeight() / 2, -15, false);
+        rotate3DAnimator.setDuration(3000);                         //设置动画时长
+        rotate3DAnimator.setFillAfter(true);                        //保持旋转后效果
+        rotate3DAnimator.setInterpolator(new AnticipateOvershootInterpolator()); //设置插值器
+        imageView.startAnimation(rotate3DAnimator);
+
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 计算中心点（这里是使用view的中心作为旋转的中心点）
+                v.startAnimation(rotate3DAnimator);
+            }
+        });
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        Log.e("imageView", imageView.getWidth() + " Attached::");
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.e("imageView", imageView.getWidth() + " FocusChanged::");
+
+        start();
 
     }
 
@@ -168,7 +212,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (x == 0) orientation = RIGHT_1;//默认向左移动
 
 
-            if (x < 2 && x > 0) orientation = RIGHT_1;
+            if (x < 2 && x > 0)
+                start();
+//                orientation = RIGHT_1;
 
             if (x > 2) orientation = RIGHT_2;
 
@@ -180,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
 
     }
 

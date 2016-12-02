@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.trimph.everything.weight.TextViewExpandableAnimation
+        android:id="@+id/tExpandable"
+        app:tvea_expandBitmap="@mipmap/icon_green_arrow_down"
+        app:tvea_expandLines="3"
+        app:tvea_shrinkBitmap="@mipmap/icon_green_arrow_up"
+        app:tvea_textContentColor="@color/dark_green"
+        app:tvea_textContentSize="15sp"
+        app:tvea_textExpand="@string/expand"
+        app:tvea_textShrink="@string/shrink"
+        app:tvea_textStateColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10" />
+</RelativeLayout>

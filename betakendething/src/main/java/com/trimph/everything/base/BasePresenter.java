@@ -1,5 +1,7 @@
 package com.trimph.everything.base;
 
+import android.view.View;
+
 /**
  * Created by tao on 2016/11/8.
  */

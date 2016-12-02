@@ -1,1 +1,1 @@
-include ':app', ':betakendething', ':gravitydemo', ':module1', ':carddraghelper', ':mylibrary', ':library'
+include ':app', ':betakendething', ':gravitydemo', ':module1', ':carddraghelper', ':mylibrary', ':library', ':svgdemo'

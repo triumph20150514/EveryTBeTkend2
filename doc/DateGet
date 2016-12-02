@@ -1,28 +1,21 @@
-```
-
 手机系统时间获取：
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     import java.text.SimpleDateFormat;
-
     SimpleDateFormat formatter = new SimpleDateFormat ("yyyy年MM月dd日 HH:mm:ss ");
     Date curDate = new Date(System.currentTimeMillis());//获取当前时间
     String str = formatter.format(curDate);
-
     以上可以获取当前的年月时分,也可以分开写（如下）:
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     String date = sDateFormat.format(new java.util.Date());
-
     如果想获取当前的年月,则可以这样写(只获取时间或秒种一样):
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM");
     String date=sdf.format(new java.util.Date());
-
     当然还有就是可以指定时区的时间(待):
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     df=DateFormat.getDateTimeInstance(DateFormat.FULL,DateFormat.FULL,Locale.CHINA);
     System.out.println(df.format(new Date()));
-
     如何获取Android系统时间是24小时制还是12小时制:
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     ContentResolver cv = this.getContentResolver();　　
@@ -32,21 +25,17 @@
     　　{
     　　Log.i("activity","24");
     　　}
-
-
     取得系统日期:
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     Calendar c = Calendar.getInstance();
     year = c.get(Calendar.YEAR);
     month = c.grt(Calendar.MONTH);
     day = c.get(Calendar.DAY_OF_MONTH);
-
     取得系统时间：
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     Calendar c = Calendar.getInstance();
     hour = c.get(Calendar.HOUR_OF_DAY);
     minute = c.get(Calendar.MINUTE);
-
     利用Time获取:
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     Time t=new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料。
@@ -57,14 +46,12 @@
     　　int hour = t.hour; // 0-23
     　　int minute = t.minute;
     　　int second = t.second;
-
     [java] view plain copy 在CODE上查看代码片派生到我的代码片
     public class DataString {
         private static String mYear;
         private static String mMonth;
         private static String mDay;
         private static String mWay;
-
         public static String StringData(){
             final Calendar c = Calendar.getInstance();
             c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
@@ -89,7 +76,7 @@
             }
             return mYear + "年" + mMonth + "月" + mDay+"日"+"/星期"+mWay;
         }
-
+//
     }
 
 

@@ -4,25 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.yalantis.taurus.PullToRefreshView
-        android:id="@+id/pullToRefresh"
+
+    <com.trimph.everything.weight.BannerIndicator
+        android:id="@+id/banner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="150dp"
+        app:bb_isLoopEnable="true" />
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/banner">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/banner">
 
-        </android.support.v7.widget.RecyclerView>
+    </android.support.v7.widget.RecyclerView>
 
-        <com.trimph.everything.weight.LVGhost
-            android:id="@+id/load_view"
-            android:layout_width="150dp"
-            android:layout_height="80dp"
-            android:layout_centerInParent="true"
-            android:background="@color/bbn_fixed_item_ripple_color" />
-    </com.yalantis.taurus.PullToRefreshView>
+
+    <com.trimph.everything.weight.LVGhost
+        android:id="@+id/load_view"
+        android:layout_width="150dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:background="@color/bbn_fixed_item_ripple_color" />
 </RelativeLayout>

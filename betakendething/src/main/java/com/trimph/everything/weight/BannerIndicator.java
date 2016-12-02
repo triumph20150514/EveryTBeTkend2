@@ -37,7 +37,7 @@ public class BannerIndicator extends BaseIndicaorBanner<GankItemBean, BannerIndi
     @Override
     public View onCreateItemView(int position) {
 
-        Log.e("onCreateItemView url:::", list.get(0).getUrl());
+        Log.e("onCreateItemView url:::", list.get(0).getUrl()+"");
 
         View view = View.inflate(context, R.layout.banner_item, null);
 //        View view = LayoutInflater.from(mContext).inflate(R.layout.banner_view_layout, this, false);

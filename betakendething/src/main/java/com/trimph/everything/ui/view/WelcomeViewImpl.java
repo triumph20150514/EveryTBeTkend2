@@ -19,6 +19,7 @@ import com.trimph.everything.utils.JumpToUtils;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -50,7 +51,10 @@ public class WelcomeViewImpl extends RootView<WelcomeContact.WelcomePresenter> i
     public void showContent(GankItemBean videoRes) {
         Log.e("NET", videoRes.getUrl());
         tv.setText(videoRes.getUrl());
-        Glide.with(context).load("http://ww4.sinaimg.cn/large/610dc034jw1f6yq5xrdofj20u00u0aby.jpg").crossFade().into(startImage);
+//        Glide.with(context).load("http://ww4.sinaimg.cn/large/610dc034jw1f6yq5xrdofj20u00u0aby.jpg").crossFade().into(startImage);
+
+        Glide.with(context).load("file:///android_asset/b.jpg").crossFade().into(startImage);
+
 //        GlideUtils.DisplayImage(context, startImage, videoRes.getUrl());
         startImage.animate().scaleX(1.15f).scaleY(1.15f).setDuration(2000).setInterpolator(new LinearInterpolator()).setListener(new AnimatorListenerAdapter() {
             @Override
@@ -64,17 +68,20 @@ public class WelcomeViewImpl extends RootView<WelcomeContact.WelcomePresenter> i
 
     @Override
     public void jumpToMain(final Context context) {
-        Observable.timer(2000, java.util.concurrent.TimeUnit.MILLISECONDS)
+        Subscription subscription = Observable.timer(2000, java.util.concurrent.TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .subscribe(new Action1<Long>() {
                     @Override
                     public void call(Long aLong) {
-                        JumpToUtils.JumpToMain(context);
-                        ((WelcomeActivity) context).finish();
+                        if (active) {
+                            JumpToUtils.JumpToMain(context);
+                            ((WelcomeActivity) context).finish();
+                        }
                     }
                 });
+
     }
 
     @Override
