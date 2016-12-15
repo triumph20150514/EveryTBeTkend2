@@ -5,6 +5,7 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -43,14 +44,15 @@ public class MainActivity extends BaseActivity {
 
     private void initData() {
 
+        //初始化显示第一个
         if (homeFragment != null) {
             replace(homeFragment);
         }
         bottomNavigation.setOnMenuItemClickListener(new BottomNavigation.OnMenuItemSelectionListener() {
             @Override
             public void onMenuItemSelect(@IdRes int i, int i1) {
-//                replaceContent(i1);
-                replace(homeFragment);
+                replaceContent(i1);
+//                replace(homeFragment);
             }
 
             @Override
@@ -78,10 +80,11 @@ public class MainActivity extends BaseActivity {
 
     private void replace(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        if (!fragment.isAdded()) {
-        fragmentTransaction.replace(R.id.mian_frame, fragment, fragment.getTag());
-//        }
-        fragmentTransaction.commitAllowingStateLoss();
+        if (!fragment.isAdded()) {
+            fragmentTransaction.replace(R.id.mian_frame, fragment, fragment.getTag());
+            fragmentTransaction.commitAllowingStateLoss();
+        }
+
     }
 
     private void initView() {

@@ -87,7 +87,6 @@ public class HomeVideoTypeAdapter extends BaseSectionQuickAdapter<SectionVideoIn
 
 
     public class HeaderViewHolder extends BaseViewHolder {
-
         protected HeaderViewHolder(Context context, View view) {
             super(context, view);
         }

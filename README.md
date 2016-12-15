@@ -51,7 +51,7 @@
                   daoSession = new DaoMaster(devOpenHelper.getEncryptedWritableDb("Pwd")).newSession();
                   daoSession.getPictureDao().update(picture);
               }
-//
+``//
        4. 注解的使用
 //
          @Entity    //标志这是一个实体类
@@ -125,3 +125,5 @@
         基本使用就这些了
 
 
+ [原作者](https://github.com/GeekGhost/Ghost)
+ 

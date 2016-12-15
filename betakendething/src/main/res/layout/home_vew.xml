@@ -4,21 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <com.trimph.everything.weight.BannerIndicator
-        android:id="@+id/banner"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        app:bb_isLoopEnable="true" />
+        android:layout_height="match_parent">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/banner">
-
-    </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
     <com.trimph.everything.weight.LVGhost

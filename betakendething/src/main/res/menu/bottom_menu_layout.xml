@@ -8,7 +8,7 @@
     <item
         android:id="@+id/jinxuan"
         android:checked="true"
-        android:color="@android:color/holo_green_dark"
+        android:color="#61575C"
         android:icon="@drawable/novel_48"
         android:title="精选" />
     <item
@@ -20,7 +20,7 @@
         android:icon="@drawable/novel_48"
         android:title="精选" />
     <item
-        android:color="@android:color/holo_orange_dark"
+        android:color="#968FC9"
         android:icon="@drawable/novel_48"
         android:title="精选" />
 </menu>

@@ -37,9 +37,11 @@ dependencies {
     compile 'org.simple:androideventbus:1.0.5.1'
     //
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:1.0.5'
-    compile 'fm.jiecao:jiecaovideoplayer:4.7.1_preview' //视频播放库
+    compile 'fm.jiecao:jiecaovideoplayer:4.7.1_preview'
+    //视频播放库
     compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     compile 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
+    compile 'com.daprlabs.aaron:cardstack:0.3.1-beta0' //卡片
     //底部导航
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -57,6 +59,8 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'com.flyco.banner:FlycoBanner_Lib:1.1.8@aar'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v1.5.8'
-    compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.4' //
+    compile 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:1.0.4'
+    //
     compile project(':library')
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 }

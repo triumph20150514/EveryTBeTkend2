@@ -1,7 +1,10 @@
 package com.trimph.everything.net;
 
 import android.os.Environment;
+import android.util.Log;
 
+import com.trimph.everything.log.okHttpLog.HttpLogInterceptor;
+import com.trimph.everything.log.okHttpLog.HttpLoggingInterceptorM;
 import com.trimph.everything.utils.LogIntercepter;
 
 import java.io.File;
@@ -47,7 +50,7 @@ public class RetrifitNet {
         /**
          * 缓存
          */
-        Interceptor interceptor = new Interceptor() {
+        Interceptor cacheInterceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
 
@@ -56,9 +59,12 @@ public class RetrifitNet {
         };
         File file = new File(dir, "cache");
         Cache cache = new Cache(file, maxSize);
-
 //        builder.addInterceptor(interceptor);
-        builder.addNetworkInterceptor(new HttpLoggingInterceptor());
+        HttpLoggingInterceptorM httpLoggingInterceptor = new HttpLoggingInterceptorM(new HttpLogInterceptor("HttpLogging"));
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptorM.Level.BASIC);
+        builder.addNetworkInterceptor(httpLoggingInterceptor);
+        builder.cache(cache);
+//        builder.addInterceptor(cacheInterceptor);
         builder.addInterceptor(new LogIntercepter());
 //        builder.connectTimeout(20, TimeUnit.SECONDS);
         okHttpClient = builder.build();

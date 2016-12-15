@@ -1,11 +1,14 @@
 package com.trimph.everything.net;
 
+import android.os.Build;
+
 import com.trimph.everything.model.GankHttpResponse;
 import com.trimph.everything.model.GankItemBean;
 
 import java.util.List;
 
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Path;
 import rx.Observable;
 
@@ -24,4 +27,6 @@ public interface MeiziApi {
      */
     @GET("data/福利/{num}/{page}")
     Observable<GankHttpResponse<List<GankItemBean>>> getGirlList(@Path("num") int num, @Path("page") int page);
+
+
 }

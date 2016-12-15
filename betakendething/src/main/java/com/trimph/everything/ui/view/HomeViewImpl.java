@@ -1,12 +1,14 @@
 package com.trimph.everything.ui.view;
 
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -19,6 +21,7 @@ import com.trimph.everything.model.VideoRes;
 import com.trimph.everything.ui.activity.MainActivity;
 import com.trimph.everything.ui.adapter.HomeVideoTypeAdapter;
 import com.trimph.everything.ui.adapter.HomeViewAdapter;
+import com.trimph.everything.ui.adapter.NewsListAdapter;
 import com.trimph.everything.ui.contact.HomeContact;
 import com.trimph.everything.utils.GlideUtils;
 import com.trimph.everything.utils.JumpToUtils;
@@ -58,8 +61,11 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
     public List<SectionVideoInfo> videoInfos = new ArrayList<>();
     public List<SectionVideoInfo> noTitleVideoInfos = new ArrayList<>();
 
-    @BindView(R.id.banner)
     BannerIndicator banner;
+
+    NewsListAdapter newsListAdapter;
+    @BindView(R.id.swipeRefresh)
+    SwipeRefreshLayout swipeRefresh;
 
     public HomeViewImpl(Context context) {
         this(context, null);
@@ -74,9 +80,8 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
         this.mContext = context;
         inflate(context, R.layout.home_vew, this);
 
-//        handerView = ((MainActivity) mContext).getLayoutInflater().inflate(R.layout.home_viepager_title, null, false);
-//        banner = (BannerIndicator) findViewById(R.id.banner);
-
+        handerView = ((MainActivity) mContext).getLayoutInflater().inflate(R.layout.home_viepager_title, null, false);
+        banner = (BannerIndicator) handerView.findViewById(R.id.banner);
 //        homeViewAdapter = new HomeViewAdapter(context);
     }
 
@@ -89,42 +94,80 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
 
             videoInfos.addAll(noTitleVideoInfos);
 
-            if (videoTypeAdapter == null) {
-                videoTypeAdapter = new HomeVideoTypeAdapter(mContext, R.layout.home_item_view_layout,
-                        R.layout.home_item_title, videoInfos);
+            if (newsListAdapter == null) {
+//                videoTypeAdapter = new HomeVideoTypeAdapter(mContext, R.layout.home_item_view_layout,
+//                        R.layout.home_item_title, videoInfos);
 //              myAdapter = new MyAdapter(mContext, R.layout.home_item_view_layout, videoRes.list.get(0).childList);
+
+                newsListAdapter = new NewsListAdapter(mContext, videoInfos);
+
+                if (handerView == null) {
+                    Toast.makeText(mContext, "怎么喂空咧", Toast.LENGTH_SHORT).show();
+                }
+                if (banner == null) {
+                    Toast.makeText(mContext, "Banner怎么喂空咧", Toast.LENGTH_SHORT).show();
+                }
+                newsListAdapter.setHeaderView(handerView);
             }
 
-            Log.e("TypeAdapter-------", videoTypeAdapter.getData().size() + "");
-            Log.e("TypeAdapter--------", ((SectionVideoInfo) videoTypeAdapter.getData().get(0)).isHeader + "");
-
+//            Log.e("TypeAdapter-------", videoTypeAdapter.getData().size() + "");
+//            Log.e("TypeAdapter--------", ((SectionVideoInfo) videoTypeAdapter.getData().get(0)).isHeader + "");
 //            videoTypeAdapter.addHeaderView(handerView);
             if (recycler != null) {
-                recycler.setAdapter(videoTypeAdapter);
+                recycler.setAdapter(newsListAdapter);
                 recycler.setLayoutManager(new LinearLayoutManager(mContext));
             }
-
             initListener();
         }
     }
 
+    /**
+     * 结束刷新
+     */
+    public void stopRefresh() {
+        if (swipeRefresh != null) {
+            swipeRefresh.setRefreshing(false);
+        }
+    }
+
+
     private void initListener() {
-        videoTypeAdapter.setOnRecyclerViewItemChildClickListener(new BaseQuickAdapter.OnRecyclerViewItemChildClickListener() {
+
+        newsListAdapter.setOnItemListener(new NewsListAdapter.OnItemClickListener() {
             @Override
-            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                Log.e("OnClickPositionChild", i + "");
+            public void onItemClick(View view, SectionVideoInfo bean, int pos) {
+                if (bean.t != null) {
+                    JumpToUtils.JupmToVidoInfo(mContext, bean.t);
+                }
             }
         });
 
-        videoTypeAdapter.setOnRecyclerViewItemClickListener(new BaseQuickAdapter.OnRecyclerViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int i) {
-                Log.e("OnClickPosition", i + "");
-                VideoInfo videoInfo = videoInfos.get(i).t;
-                Log.e("OnClickPosition", videoInfo.toString() + "");
-                JumpToUtils.JupmToVidoInfo(mContext, videoInfo);
-            }
-        });
+        if (swipeRefresh != null) {
+            swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (rPresenter != null) {
+                        rPresenter.getVideo();
+                    }
+                }
+            });
+        }
+//        videoTypeAdapter.setOnRecyclerViewItemChildClickListener(new BaseQuickAdapter.OnRecyclerViewItemChildClickListener() {
+//            @Override
+//            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+//                Log.e("OnClickPositionChild", i + "");
+//            }
+//        });
+
+//        videoTypeAdapter.setOnRecyclerViewItemClickListener(new BaseQuickAdapter.OnRecyclerViewItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, int i) {
+//                Log.e("OnClickPosition", i + "");
+//                VideoInfo videoInfo = videoInfos.get(i).t;
+//                Log.e("OnClickPosition", videoInfo.toString() + "");
+//                JumpToUtils.JupmToVidoInfo(mContext, videoInfo);
+//            }
+//        });
 
     }
 
@@ -144,7 +187,13 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
                 for (int j = 0; j < list.size(); j++) {
                     VideoInfo videoInfo = list.get(j);
                     if (j == 0) {
-                        videoInfos.add(new SectionVideoInfo(true, "免费推荐"));
+                        SectionVideoInfo sectionVideoInfo1 = new SectionVideoInfo(true, "Banner");
+                        sectionVideoInfo1.setType(-1);
+                        videoInfos.add(sectionVideoInfo1);
+
+                        SectionVideoInfo sectionVideoInfo = new SectionVideoInfo(true, "免费推荐");
+                        sectionVideoInfo.setType(1);
+                        videoInfos.add(sectionVideoInfo);
                         Log.e("HomeView 免费推荐*********:" + i, ":" + videoInfos.get(0).isHeader + "");
                         videoInfos.add(new SectionVideoInfo(videoInfo));
 //                        Log.e("HomeView size 免费推荐---:" + i, ":" + videoInfos.get(0).isHeader + "");
@@ -163,7 +212,9 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
                     VideoInfo videoInfo = list.get(j);
                     SectionVideoInfo sectionVideoInfo;
                     if (j == 0) {
-                        videoInfos.add(new SectionVideoInfo(true, "热点资讯"));
+                        SectionVideoInfo sectionVideoInfo1 = new SectionVideoInfo(true, "热点资讯");
+                        sectionVideoInfo1.setType(1);
+                        videoInfos.add(sectionVideoInfo1);
                         videoInfos.add(new SectionVideoInfo(videoInfo));
                     } else {
                         videoInfos.add(new SectionVideoInfo(videoInfo));
@@ -178,7 +229,9 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
                     if (j == 0) {
 //                    videoInfo.header = "精彩推荐";
 //                    videoInfo.isHeader = true;
-                        videoInfos.add(new SectionVideoInfo(true, "精彩推荐"));
+                        SectionVideoInfo sectionVideoInfo1 = new SectionVideoInfo(true, "精彩推荐");
+                        sectionVideoInfo1.setType(1);
+                        videoInfos.add(sectionVideoInfo1);
                         videoInfos.add(new SectionVideoInfo(videoInfo));
                     } else {
                         videoInfos.add(new SectionVideoInfo(videoInfo));
@@ -193,7 +246,9 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
                     if (j == 0) {
 //                    videoInfo.header = "好莱坞";
 //                    videoInfo.isHeader = true;
-                        videoInfos.add(new SectionVideoInfo(true, "好莱坞"));
+                        SectionVideoInfo sectionVideoInfo1 = new SectionVideoInfo(true, "好莱坞");
+                        sectionVideoInfo1.setType(1);
+                        videoInfos.add(sectionVideoInfo1);
                         videoInfos.add(new SectionVideoInfo(videoInfo));
                     } else {
                         videoInfos.add(new SectionVideoInfo(videoInfo));
@@ -208,10 +263,11 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
                     if (j == 0) {
 //                        videoInfo.header = "专题";
 //                        videoInfo.isHeader = true;
-                        videoInfos.add(new SectionVideoInfo(true, "专题"));
-                        videoInfos.add(new SectionVideoInfo(videoInfo));
+
+
+//                        videoInfos.add(new SectionVideoInfo(videoInfo));
                     } else {
-                        videoInfos.add(new SectionVideoInfo(videoInfo));
+//                        videoInfos.add(new SectionVideoInfo(videoInfo));
                     }
                 }
 //                videoInfos.addAll(videoRes.list.get(i).getChildList());
@@ -223,10 +279,11 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
                     if (j == 0) {
 //                        videoInfo.header = "直播专区";
 //                        videoInfo.isHeader = true;
-                        videoInfos.add(new SectionVideoInfo(true, "直播专区"));
-                        videoInfos.add(new SectionVideoInfo(videoInfo));
+
+//                        videoInfos.add(new SectionVideoInfo(true, "直播专区"));
+//                        videoInfos.add(new SectionVideoInfo(videoInfo));
                     } else {
-                        videoInfos.add(new SectionVideoInfo(videoInfo));
+//                        videoInfos.add(new SectionVideoInfo(videoInfo));
                     }
                 }
 //                videoInfos.addAll(videoRes.list.get(i).getChildList());
@@ -237,7 +294,7 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
                     VideoInfo videoInfo = list.get(j);
 //                    videoInfo.header = "直播专区";
 //                    videoInfo.isHeader = true;
-                    noTitleVideoInfos.add(new SectionVideoInfo(videoInfo));
+//                    noTitleVideoInfos.add(new SectionVideoInfo(videoInfo));
                 }
 //                videoInfos.addAll(videoRes.list.get(i).getChildList());
             }
@@ -272,9 +329,13 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
         }
         if (gankItemBeanList != null) {
             Log.e("showBannerImage-------", "size" + gankItemBeanList.size());
+            if (handerView == null) {
+                Log.e("showBannerImage-------", "handerView ==null");
+            }
             if (banner != null) {
-                Log.e("showBannerImage-------", "banner" + gankItemBeanList.size());
+                Log.e("showBannerImage-------", "banner ==null");
                 banner.setSource(gankItemBeanList).startScroll(); // 添加 startScroll 不然图片就出不来
+                newsListAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -299,6 +360,7 @@ public class HomeViewImpl extends RootView<HomeContact.presenter> implements Hom
             Log.e("Dialog", "closeDialog");
             loadView.setVisibility(GONE);
         }
+        stopRefresh();
     }
 
     @Override

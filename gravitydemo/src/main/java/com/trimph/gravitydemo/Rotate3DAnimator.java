@@ -20,6 +20,7 @@ public class Rotate3DAnimator extends Animation {
     private final float mCenterY;
     private final float mDepthZ;
     private final boolean mReverse;
+    private int derect;
     private Camera mCamera;
     float scale = 1;    // <------- 像素密度
 
@@ -34,7 +35,7 @@ public class Rotate3DAnimator extends Animation {
      * @param depthZ      最远到达的z轴坐标
      * @param reverse     true 表示由从0到depthZ，false相反
      */
-    public Rotate3DAnimator(Context context, float fromDegrees, float toDegrees,
+    public Rotate3DAnimator(Context context, float fromDegrees, float toDegrees, int derection,
                             float centerX, float centerY, float depthZ, boolean reverse) {
         mFromDegrees = fromDegrees;
         mToDegrees = toDegrees;
@@ -42,6 +43,7 @@ public class Rotate3DAnimator extends Animation {
         mCenterY = centerY;
         mDepthZ = depthZ;
         mReverse = reverse;
+        this.derect = derection;  //倾斜方向
 
         // 获取手机像素密度 （即dp与px的比例）
         scale = context.getResources().getDisplayMetrics().density;
@@ -65,14 +67,22 @@ public class Rotate3DAnimator extends Animation {
 
         // 调节深度
         if (mReverse) {
-            camera.translate(0.0f, (float) (15.0 * interpolatedTime), mDepthZ * interpolatedTime); //小到大
+            camera.translate(0.0f, 0f, mDepthZ * interpolatedTime); //小到大
         } else {
             camera.translate(0.0f, 0.0f, mDepthZ * (1.0f - interpolatedTime));//大到小
         }
 
-        // 绕y轴旋转
-        camera.rotateY(degrees);
-        camera.rotateX(degrees);
+        if (derect == 1) {
+            // 绕y轴旋转
+            camera.rotateY(degrees);
+//            camera.rotateX(degrees);
+        } else if (derect == 2) {
+            camera.rotateX(degrees);
+        } else {
+            camera.rotateY(degrees);
+            camera.rotateX(degrees);
+        }
+
 
         camera.getMatrix(matrix);
         camera.restore();

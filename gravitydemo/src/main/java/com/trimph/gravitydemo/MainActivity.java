@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.widget.ImageView;
@@ -34,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Matrix mMatrix;
 
     private SensorManager sensorManager;
+
+    public int distance = 30; //背景移动间距
+    public int contentDis = 20; //内容移到间距
 
     //以速度1向左移动
     private static final int LEFT_1 = 1;
@@ -113,21 +117,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //获取系统传感器服务
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        //设置监听器监听加速度传感器（重力感应器）的状态，精度为普通（SENSOR_DELAY_NORMAL）
+        //设置监听器监听加速度传感器（重力感应器）的状态，精度为普通（SENSOR_DELAY_NORMAL） //TYPE_ACCELEROMETER
+        //陀螺仪TYPE_GYROSCOPE
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-
 
     }
 
-    private void start() {
-        Log.e("Image", imageView.getWidth() + " heigth:" + imageView.getHeight() + " left:" + imageView.getLeft() + " right" + imageView.getTop());
-        final Rotate3DAnimator rotate3DAnimator = new Rotate3DAnimator(this, 0, 5,
-                imageView.getWidth() / 2, imageView.getHeight() / 2, -15, false);
+    public boolean isStart = false;
+
+    private void start(int zF, int derection) {
+        isStart = true;
+        Log.e("Image", imageView.getWidth() + " heigth:" + imageView.getHeight()
+                + " left:" + imageView.getLeft() + " right" + imageView.getTop());
+        final Rotate3DAnimator rotate3DAnimator = new Rotate3DAnimator(this,
+                0, 5,
+                derection,
+                width / 2,
+                height / 2,
+                zF, false);
         rotate3DAnimator.setDuration(3000);                         //设置动画时长
         rotate3DAnimator.setFillAfter(true);                        //保持旋转后效果
+        rotate3DAnimator.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isStart = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         rotate3DAnimator.setInterpolator(new AnticipateOvershootInterpolator()); //设置插值器
         imageView.startAnimation(rotate3DAnimator);
-
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,9 +176,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onWindowFocusChanged(hasFocus);
         Log.e("imageView", imageView.getWidth() + " FocusChanged::");
 
-        start();
-
+        width = imageView.getWidth();
+        height = imageView.getHeight();
+//        start();
     }
+
+    public int width, height;
 
     /**
      * 设置动画属性
@@ -192,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             ivBg.setImageMatrix(mMatrix);
             ivBg.invalidate();
         }
+
+
     }
 
     /**
@@ -208,20 +240,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            Sensor.TYPE_GRAVITY
             //获取X坐标
             int x = (int) event.values[SensorManager.DATA_X];
+            int Y = (int) event.values[SensorManager.DATA_Y];
+            int Z = (int) event.values[SensorManager.DATA_Z];
 
+            //X轴  左倾斜为正   有切斜为负
+            //Y轴  向怀里倾斜为正   往外围负
+            //Z轴  水平为正数  头部垂直向下，或者向上都变小   渐渐回到水平位置时慢慢变大
+            Log.e("Value[0]  TYPE_GRAVITY", x + " /n  Y[1]" +
+                    Y + "/n Z " + Z);
+
+            if (x > 2 && Y <= 1) { // 左倾斜
+                if (!isStart) {
+                    start(-15, 3);
+                }
+            } else {       //右倾斜
+//                start(15, 2);
+            }
+
+
+
+            /*
             if (x == 0) orientation = RIGHT_1;//默认向左移动
-
 
             if (x < 2 && x > 0)
                 start();
 //                orientation = RIGHT_1;
-
             if (x > 2) orientation = RIGHT_2;
 
             if (x < 0 && x > -2) orientation = LEFT_1;
 
             if (x < -2) orientation = LEFT_2;
+            */
+        } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {//陀螺仪传感器
+
+            Log.e("Value[0] TYPE_GYROSCOPE", event.values[0] + " /n  value[1]" +
+                    event.values[1] + "/n value[2]" + event.values[2]);
+
+            Log.e("Value z:", event.values[SensorManager.AXIS_MINUS_Z] + "");
+
         }
+
+
     }
 
     @Override

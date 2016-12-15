@@ -404,7 +404,7 @@ public class VideoDetail {
             this.childList = childList;
         }
 
-        public static class ChildListBean {
+        public static class ChildListBean extends BaseModel{
             private int airTime;
             private String duration;
             private String loadtype;
@@ -416,6 +416,11 @@ public class VideoDetail {
             private String shareURL;
             private String pic;
             private String title;
+
+            public ChildListBean(int type) {
+                super(type);
+            }
+
 
             public int getAirTime() {
                 return airTime;

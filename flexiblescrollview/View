@@ -1,0 +1,10 @@
+View 執行流程
+12-14 15:44:06.431 1161-1161/? E/ScrollView-----: 两个参数的
+12-14 15:44:06.438 1161-1161/? E/ScrollView: FinishInflate1
+12-14 15:44:06.452 1161-1161/? E/ScrollView-----: onMeasure
+12-14 15:44:06.453 1161-1161/? E/ScrollView-----: onMeasure
+12-14 15:44:06.457 1161-1161/? E/ScrollView-----: onSizeChanged0
+12-14 15:44:06.458 1161-1161/? E/ScrollView-----: onLayout0
+12-14 15:44:06.468 1161-1161/? E/ScrollView-----: onMeasure
+12-14 15:44:06.468 1161-1161/? E/ScrollView-----: onMeasure
+12-14 15:44:06.468 1161-1161/? E/ScrollView-----: onLayout0

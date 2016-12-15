@@ -16,8 +16,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.trimph.everything.R;
 import com.trimph.everything.base.VBaseFragment;
+import com.trimph.everything.model.SectionVideoInfo;
 import com.trimph.everything.model.VideoDetail;
 import com.trimph.everything.model.VideoInfo;
+import com.trimph.everything.ui.adapter.VideoInfoAdapter;
 import com.trimph.everything.ui.view.HomeViewImpl;
 import com.trimph.everything.utils.GlideUtils;
 import com.trimph.everything.weight.TextViewExpandableAnimation;
@@ -25,6 +27,7 @@ import com.trimph.everything.weight.TextViewExpandableAnimation;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -43,10 +46,12 @@ public class FravoriteFragment extends VBaseFragment {
     public Unbinder unbinder;
 
     TextViewExpandableAnimation tExpandable;
-
+    public List<VideoDetail.ListBean.ChildListBean> sectionVideoInfos = new ArrayList<>();
     @BindView(R.id.favar_recycler)
     RecyclerView favarRecycler;
     ExpandAdapter expandAdapter;
+
+    VideoInfoAdapter videoInfoAdapter;
 
     @Nullable
     @Override
@@ -70,22 +75,59 @@ public class FravoriteFragment extends VBaseFragment {
         View view = getActivity().getLayoutInflater().inflate(R.layout.video_info_text_title, null);
         tExpandable = (TextViewExpandableAnimation) view.findViewById(R.id.tExpandable);
 
-        String author = "主演：" + videoDetail.getActors();
-        String str = "导演：" + videoDetail.getDirector();
-        String desc = "描述：" + videoDetail.getDescription();
+        initVideo(videoDetail);
+        String author = " 主演：" + videoDetail.getActors();
+        String str = " 导演：" + videoDetail.getDirector();
+        String desc = " 描述：" + videoDetail.getDescription();
         if (tExpandable != null)
             tExpandable.setText(author + "\n" + str + "\n" + desc);
 
-        if (expandAdapter == null) {
-            expandAdapter = new ExpandAdapter(getContext(), R.layout.home_item_view_layout,
-                    videoDetail.getList().get(0).getChildList());
+        if (videoInfoAdapter == null) {
+//            expandAdapter = new ExpandAdapter(getContext(), R.layout.home_item_view_layout,
+//                    videoDetail.getList().get(0).getChildList());
+            videoInfoAdapter = new VideoInfoAdapter(getContext());
+
+            videoInfoAdapter.setSectionVideoInfos(sectionVideoInfos);
         }
 
-        expandAdapter.addHeaderView(view);
+        videoInfoAdapter.setHanderView(view);
 
         if (favarRecycler != null) {
             favarRecycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
-            favarRecycler.setAdapter(expandAdapter);
+            favarRecycler.setAdapter(videoInfoAdapter);
+        }
+
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) favarRecycler.getLayoutManager();
+
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                int type = videoInfoAdapter.getItemViewType(position);
+                if (type == VideoInfoAdapter.TITLE_TYPE) {
+                    return 3;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
+    }
+
+    /**
+     * 转化成Section
+     *
+     * @param videoDetail
+     */
+    private void initVideo(VideoDetail videoDetail) {
+
+        sectionVideoInfos.add(new VideoDetail.ListBean.ChildListBean(1));
+
+        int size = videoDetail.getList().size();
+        for (int i = 0; i < size; i++) {
+            List<VideoDetail.ListBean.ChildListBean> listBeans = videoDetail.getList().get(i).getChildList();
+            for (int ii = 0; ii < listBeans.size(); ii++) {
+                sectionVideoInfos.add(listBeans.get(ii));
+            }
         }
 
     }

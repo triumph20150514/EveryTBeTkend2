@@ -15,9 +15,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/video_iamge"
-        android:gravity="center"
         android:layout_centerHorizontal="true"
         android:background="@color/bbn_fixed_item_ripple_color"
+        android:gravity="center"
+        android:maxLines="1"
         android:padding="10dp"
         android:textColor="@android:color/white" />
 </RelativeLayout>
