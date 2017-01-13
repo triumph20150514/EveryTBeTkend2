@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="scratchView">
+        <attr name="outter_bg" format="integer"></attr>
+    </declare-styleable>
+
+</resources>

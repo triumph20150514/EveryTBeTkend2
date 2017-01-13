@@ -1,7 +1,10 @@
 package com.trimph.everything.utils;
 
 import android.util.Log;
+import android.widget.Toast;
 
+
+import com.trimph.everything.base.App;
 
 import java.io.IOException;
 
@@ -20,6 +23,11 @@ public class LogIntercepter implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Log.e(TAG, "------------chain----------");
+
+
+        if (!SystemUtils.checkNet(App.getInstance())){
+            Log.e("NetError","error");
+        }
         Request request = chain.request();
 
         long t1 = System.nanoTime();

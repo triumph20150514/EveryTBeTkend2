@@ -18,7 +18,7 @@ import android.widget.Scroller;
  * description : 弹性滚动
  */
 
-public class FlexibleScrollView extends FrameLayout {
+public class FlexibleScrollView extends ScrollView {
 
     public int distance = 20; //当移动大于20才开始滚动
 
@@ -65,7 +65,7 @@ public class FlexibleScrollView extends FrameLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         Log.e("ScrollView-----", "onSizeChanged" + content.getTop());
-//        origin.set(content.getLeft(), content.getTop(), content.getRight(), content.getBottom());
+        origin.set(content.getLeft(), content.getTop(), content.getRight(), content.getBottom());
     }
 
     @Override
@@ -91,13 +91,12 @@ public class FlexibleScrollView extends FrameLayout {
                 downX = (int) ev.getX();
                 break;
             case MotionEvent.ACTION_UP:
-
+                int upY = (int) ev.getY();
                 int offset1 = ((int) ev.getY() - downY);
                 Log.e("Content", content.getTop() + "origint top:" + origin.top + " scrollY:" + getScrollY() + " oofset" + offset);
 //                overScroller.startScroll(0, content.getTop(), 0, origin.top);
 
-                scroller.startScroll(getScrollX(), getScrollY(), 0, -offset);
-                invalidate();
+                smoothScroll(upY);
 //                content.scrollTo(0, 0);
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -116,6 +115,12 @@ public class FlexibleScrollView extends FrameLayout {
                 break;
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    private void smoothScroll(int downY) {
+        Log.e("SmoothScroll", getScrollY() + "");
+        scroller.startScroll(getScrollX(), downY, 0, -offset, 500);
+        invalidate();
     }
 
 

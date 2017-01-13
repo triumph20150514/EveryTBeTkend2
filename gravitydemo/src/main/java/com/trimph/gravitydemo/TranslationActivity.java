@@ -70,8 +70,9 @@ public class TranslationActivity extends Activity {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         //设置监听器监听加速度传感器（重力感应器）的状态，精度为普通（SENSOR_DELAY_NORMAL） //TYPE_ACCELEROMETER
-        //陀螺仪TYPE_GYROSCOPE
-        sensorManager.registerListener(sensorTransListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        //陀螺仪TYPE_GYROSCOPE  SENSOR_DELAY_NORMAL
+        sensorManager.registerListener(sensorTransListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 //    public float getTypeValue() {
@@ -90,6 +91,8 @@ public class TranslationActivity extends Activity {
 
         @Override
         public void onSensorChanged(SensorEvent event) {
+
+
 
             //若传感器类型为加速度传感器（重力感应器）
             if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -156,7 +159,7 @@ public class TranslationActivity extends Activity {
          * 左移动
          */
         private void leftTranslate() {
-            MyType myType=new MyType();
+            MyType myType = new MyType();
 //            myType.evaluate()
 
         }

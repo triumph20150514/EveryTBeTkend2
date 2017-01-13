@@ -1,0 +1,116 @@
+### svg使用
+ >> 了解相关属性的作用
+    <vector xmlns:android="http://schemas.android.com/apk/res/android"  //命名空间
+        android:height="200dp"  //这个是图片的intrinsic高度
+        android:width="200dp"   //这个是图片的intrinsic宽度
+        android:viewportHeight="100"    //这个是为这个图片设置的纵坐标,表示将图片分为100等份,主要下面的pathData需要依赖这个坐标的划分
+        android:viewportWidth="100"     //同上,只不过这个是横坐标,这两个值可以随便定
+        android:alpha="0.2"     //这个是整个图像的透明度,取值范围0到1
+        >
+      <group         //这个标签中可以放入若干个<path/>标签,并给它们设置一些共同的属性
+            android:name="group_name"   //这个name很有用,在设置objectAnimator的时候用来区分给那个部分施加动画
+            android:pivotY="50"     //这个设置这个group的中心点的X坐标,取值范围为0到100,在做rotation时有用
+            android:pivotX="50"     //这个设置这个group的中心点的Y坐标,取值范围为0到100,在做rotation时有用
+            android:translateX="20" //将整个group在X轴方向平移多少像素
+            android:translateY="30" //将整个group在Y轴方向平移多少像素
+            android:rotation="90"   //将整个group以中心点左边旋转的角度,360为一圈
+            android:scaleX="0.5"    //横坐标的缩放比例 , 取值1表示100%
+            android:scaleY="0.3">   //纵坐标的缩放比例,取值0.5表示50%,取值1.5表示150%    
+            <path   //这个标签是重头戏,矢量图绘制的路径
+                android:name="path_name"    //为这个path标记的名字,在使用objectAnimator的时候用来区分给哪个部分施加动画
+                android:pathData="m 0,0 L50,0 L100,100 L0,100 z"    //这个具体语法,在网上随便搜搜就有了,就是SVG的语法,如果这个都不明白,
+                那么你肯定不明白什么是矢量图,找点资料再看看吧,这篇文章不适合你
+                android:fillColor="@color/red"  //图形内部的夜色
+                android:fillAlpha="1"       //图形的透明度取值范围0到1
+                android:strokeAlpha="0.5"   //线条的透明度,取值范围0到1
+                android:strokeColor="#ff0000ff" //线条的颜色
+                android:strokeLineCap="butt|round|square"   //线的末端形状,butt严格到指定的坐标就截至,round圆角的先端边缘,square方形的边缘不过有点向外延伸
+                android:strokeLineJoin="round|bevel|miter"  //线的连接处形状,round是圆角的,bevel和miter貌似看不出来有什么区别....
+                android:strokeWidth="20"    //线段的宽度    
+                android:trimPathStart="0.5"    //顾名思义,从path开始的地方(0%)去除path,去除到指定的百分比位置,取值范围0到1  //意思从开始的点开始截取内容  
+                android:trimPathEnd="0.5"      //顾名思义,从path结束的地方(100%的地方)去除path,去除到指定的百分比位置,取值范围0到1     //只会显示开始到截取位置的图
+                android:trimPathOffset="0.5"   //这个属性是和上面两个属性共同使用的,单独使用没有用,这个属性的意思是,在去除path的时候设置path原点的位置,按百分比设置,取值范围0到1
+                />   
+ ###           </group>          
+                 
+###   </vector>  
+
+### svg如何转换的
+
+```
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.0" viewBox="0 0 180 400" width="180px" height="320" preserveAspectRatio="none">
+    <path d="M 180,230 L 0,320 0,0 180,0 z" fill="#000000"/>
+</svg>
+path是画出这个矢量图所需的笔画路径，这里就是移植到android所需要的关键部分。下面来看转换成android能用SVG图内容，这里我将重点讲解
+```
+sharp_rect.xml
+```
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="180dp"
+        android:height="320dp"
+        android:viewportWidth="180"
+        android:viewportHeight="400">
+        
+ ```
+ ```
+ 
+   <path
+        android:name="sharp_rect"
+        android:fillColor="#000000"
+        android:pathData="M 180,230 L 0,320 0,0 180,0 z" />
+</vector>
+注意到和普通SVG图内容不同地方在与viewBox那变成了viewportWidth，viewportHeight，viewport就相当于画这个SVG的画布大小。width和height是规定这个SVG图像最终的显示大小的，一般用dp表示。第二个不同是有一个普通SVG里的fill到android里要变成fillColor，这里就是SVG图像填充的颜色。第三点不同是，普通SVG的path的数据是d开头的标签，在android里要写成pathData。综上所述，只要把viewBox的大小改成viewport的大小，把填充颜色的fill改成fillColor，把Path中的d，改成pathData就行了。
+
+还有最后一个问题pathData中的那些奇怪的东西是啥？数字是在viewport中的坐标点，M代表move to（把画笔移动到），L是Line（划线），Z是封闭path.（更多参考）
+
+我们可以通过上面的变动手动把普通SVG转成android用的VectorDrawable,或者我们可以用这个网站自动完成转换 http://inloop.github.io/svg2android/
+   
+### 怎么把它动起来  ------      res/animator/ 创建动画
+   需要使用到动画
+   <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+       android:duration="2000"
+       android:interpolator="@android:interpolator/linear"
+       android:propertyName="trimPathStart"   //操作的属性内容
+       android:repeatMode="reverse"    //
+       android:repeatCount="-1"        //  无限重复
+       android:valueFrom="1"           //开始百分比
+       android:valueTo="0.4"           // 结束百分比
+       android:valueType="floatType">       //类型
+   
+   </objectAnimator>
+   ---        svg 如下   drawable目录下
+   <vector xmlns:android="http://schemas.android.com/apk/res/android"
+       android:width="24dp"
+       android:height="24dp"
+       android:viewportHeight="24.0"
+       android:viewportWidth="24.0">
+       <path
+           android:name="first_svg"   //那么唯一方便查找   需要用到动画的时候回用到
+           android:trimPathEnd="0.8"
+           android:fillColor="#FF000000"
+           android:pathData="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41,-1.41z" />
+   </vector>
+   -------   直接把下面的当做drawable使用即可      //如何使用的是原始的svg图  那么动画就不会执行
+   -------   在drawable下面 创建 animated-vector  把动画和svg联系起来
+   <animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+       android:drawable="@drawable/ic_check_black_24dp"      //svg图
+       >
+   
+       <target
+           android:animation="@animator/sector_anim"
+           android:name="first_svg"/>
+   
+   </animated-vector>
+  
+  ------  动起来
+  ImageView imageView = (ImageView) findViewById(R.id.svg);
+
+        Drawable drawable = imageView.getDrawable();
+
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
+        }
+
+
+    

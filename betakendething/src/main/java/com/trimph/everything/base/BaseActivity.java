@@ -23,7 +23,6 @@ public class BaseActivity<T extends BasePresenter> extends FragmentActivity {
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

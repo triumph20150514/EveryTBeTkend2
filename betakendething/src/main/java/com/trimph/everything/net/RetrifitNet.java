@@ -57,7 +57,7 @@ public class RetrifitNet {
                 return null;
             }
         };
-        File file = new File(dir, "cache");
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator, "EveryTbe");
         Cache cache = new Cache(file, maxSize);
 //        builder.addInterceptor(interceptor);
         HttpLoggingInterceptorM httpLoggingInterceptor = new HttpLoggingInterceptorM(new HttpLogInterceptor("HttpLogging"));

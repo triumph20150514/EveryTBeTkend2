@@ -6,6 +6,8 @@ import com.trimph.everything.model.VideoRes;
 import com.trimph.everything.model.VideoResult;
 
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -23,7 +25,9 @@ public interface MediaAPi {
      * http://api.svipmovie.com/front/homePageApi/homePage.do
      *
      * @return
+     * @Headers("Cache-Control: public, max-age=3600)
      */
+    @Headers("Cache-Control:public,max-age=3600")
     @GET("homePageApi/homePage.do")
     Observable<VideoHttpResponse<VideoRes>> getHomePage();
 
