@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 
+// 定义一个打包时间
+def releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
+}
+
+//加载签名配置的文件
+Properties props = new Properties();
+props.load(new FileInputStream(file("sign.properties")))  //新建一个properties文件存放签名文件信息
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
@@ -12,11 +21,39 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+
+    signingConfigs {
+        release {
+            //设置release的签名信息
+//            storeFile file('KEYSTORE_FILE')
+//            keyAlias file('KEY_ALIAS')
+//            keyPassword file('KEY_PASSWORD')
+//            storePassword file('KEYSTORE_PASSWORD')
+
+            //设置release的签名信息
+            keyAlias props['KEY_ALIAS']
+            keyPassword props['KEY_PASSWORD']
+            storeFile file(props['KEYSTORE_FILE'])
+            storePassword props['KEYSTORE_PASSWORD']
+        }
+    }
+
     buildTypes {
         release {
+
+            //告诉gradle 打release版本的时候使用的签名信息
+            signingConfig signingConfigs.release
+            //无效资源不要打包进release版本
+//            shrinkResources true
+            //release版本我们把扰码打开
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+
+
+
     }
 
     greendao {
@@ -24,11 +61,71 @@ android {
         targetGenDir 'src/main/java'
         daoPackage 'com.trimph.everytbetend.model.db'
     }
+    productFlavors {
+        wandoujia  {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wandoujia"]
+        }
+        xiaomi  {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+        }
+        qq  {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "qq"]
+        }
+        360  {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "360"]
+        }
+    }
+
+
+
+    applicationVariants.all {
+        variant ->
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('release.apk')) {
+                    // 输出apk名称为XXX20160328_v1.0.0_vc10_XXXX_test.apk
+                    if (project.hasProperty('ENVIRONMENT_PARA')) {
+                        println "输出文件位置 releaseTime：============================ "
+                        def fileName = " XXX${releaseTime()}_v${defaultConfig.versionName}_vc${defaultConfig.versionCode}_${variant.productFlavors[0].name}_${ENVIRONMENT_PARA}.apk"
+                    }
+                    def fileName = " ${project.parent.name}_${releaseTime()}_v${defaultConfig.versionName}_vc${defaultConfig.versionCode}.apk"
+//                        output.outputFile=new File(fileName);  //app目录下
+                    output.outputFile = new File("apk", fileName);  //app目录下创建apk文件夹  生成文件放在此目录下
+                    println "输出文件位置 fileName： " + fileName
+                    println "输出文件位置 releaseTime： " + releaseTime()
+                    println "输出文件位置 Name： " + outputFile.name
+                    //控制输出的APK的存放路径
+                    if (project.hasProperty('OUT_PUT_DIR_PARA')) {
+                        println "输出文件位置 Name：OUT_PUT_DIR_PARA "
+                        File output_dir1 = file("${OUT_PUT_DIR_PARA}")
+                        output.outputFile = new File(output_dir1, fileName)
+//                        println "输出文件位置 parent： " + output.outputFile.parent;
+//                        output.outputFile=new File(outputFile.parent,fileName);
+                        println "输出文件位置 output： " + output.parent
+                    } else {
+//                            output.outputFile = new File(outputFile.name.endsWith, fileName)
+//                        output.outputFile=new File("/app",fileName);
+//                            println "输出文件位置： " + output.parent
+                    }
+
+                    //把unaligned apk删除掉 看着碍眼
+//                    File unaligned=output.packageApplication.outputFile
+//                    unaligned.delete()
+                }
+            }
+    }
+
+
+
+
+
+
+
 }
 
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -37,5 +134,5 @@ dependencies {
     compile 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.1'
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'org.greenrobot:greendao-generator:3.0.0'
-//    compile 'net.zetetic:android-database-sqlcipher:3.5.2'
+    //    compile 'net.zetetic:android-database-sqlcipher:3.5.2'
 }
